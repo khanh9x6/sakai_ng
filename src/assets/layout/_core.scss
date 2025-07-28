@@ -21,4 +21,91 @@ a {
 
 .layout-wrapper {
     min-height: 100vh;
+
+    // Static layout styles
+    &.layout-static {
+        .layout-main-container {
+            margin-left: 18rem;
+        }
+
+        .layout-sidebar {
+            left: 0;
+        }
+
+        &.layout-static-inactive {
+            .layout-sidebar {
+                left: -18rem;
+            }
+
+            .layout-main-container {
+                margin-left: 0;
+            }
+        }
+
+        // Slim mode styles
+        &.layout-slim {
+            .layout-sidebar {
+                width: 5rem;
+            }
+
+            .layout-main-container {
+                margin-left: 5rem;
+            }
+
+            &.layout-static-inactive {
+                .layout-sidebar {
+                    left: -5rem;
+                }
+
+                .layout-main-container {
+                    margin-left: 0;
+                }
+            }
+        }
+
+        // Slim Plus mode styles
+        &.layout-slim-plus {
+            .layout-sidebar {
+                width: 8rem;
+            }
+
+            .layout-main-container {
+                margin-left: 8rem;
+            }
+
+            &.layout-static-inactive {
+                .layout-sidebar {
+                    left: -8rem;
+                }
+
+                .layout-main-container {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+
+    // Overlay layout styles
+    &.layout-overlay {
+        .layout-main-container {
+            margin-left: 0;
+        }
+
+        .layout-sidebar {
+            left: -18rem;
+        }
+
+        &.layout-overlay-active {
+            .layout-sidebar {
+                left: 0;
+            }
+        }
+    }
+
+    // Mobile layout styles
+    &.layout-mobile-active {
+        .layout-sidebar {
+            left: 0;
+        }
+    }
 }

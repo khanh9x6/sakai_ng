@@ -70,6 +70,16 @@
             background-color: var(--primary-color);
             color: var(--primary-contrast-color);
         }
+
+        &.slim-active {
+            background-color: var(--primary-color);
+            color: var(--primary-contrast-color);
+        }
+
+        &.slim-plus-active {
+            background-color: var(--primary-color);
+            color: var(--primary-contrast-color);
+        }
     }
 
     .layout-menu-button {

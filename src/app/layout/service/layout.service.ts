@@ -15,6 +15,8 @@ interface LayoutState {
     configSidebarVisible?: boolean;
     staticMenuMobileActive?: boolean;
     menuHoverActive?: boolean;
+    slimMenuActive?: boolean;
+    slimPlusMenuActive?: boolean;
 }
 
 interface MenuChangeEvent {
@@ -39,7 +41,9 @@ export class LayoutService {
         overlayMenuActive: false,
         configSidebarVisible: false,
         staticMenuMobileActive: false,
-        menuHoverActive: false
+        menuHoverActive: false,
+        slimMenuActive: false,
+        slimPlusMenuActive: false
     };
 
     layoutConfig = signal<layoutConfig>(this._config);
@@ -171,6 +175,24 @@ export class LayoutService {
     onMenuStateChange(event: MenuChangeEvent) {
         this.menuSource.next(event);
     }
+
+    onSlimModeToggle() {
+        this.layoutState.update((prev) => ({
+            ...prev,
+            slimMenuActive: !this.layoutState().slimMenuActive,
+            slimPlusMenuActive: false // Tắt slim plus khi bật slim
+        }));
+    }
+
+    onSlimPlusModeToggle() {
+        this.layoutState.update((prev) => ({
+            ...prev,
+            slimPlusMenuActive: !this.layoutState().slimPlusMenuActive,
+            slimMenuActive: false // Tắt slim khi bật slim plus
+        }));
+    }
+
+    isSlimPlusMode = computed(() => this.layoutState().slimPlusMenuActive);
 
     reset() {
         this.resetSource.next(true);

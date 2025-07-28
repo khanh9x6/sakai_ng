@@ -55,6 +55,50 @@
                     padding-left: 2rem;
                 }
             }
+
+            // Slim mode for desktop
+            &.layout-slim {
+                .layout-main-container {
+                    margin-left: 5rem;
+                }
+
+                .layout-sidebar {
+                    width: 5rem;
+                }
+
+                &.layout-static-inactive {
+                    .layout-sidebar {
+                        transform: translateX(-100%);
+                    }
+
+                    .layout-main-container {
+                        margin-left: 0;
+                        padding-left: 2rem;
+                    }
+                }
+            }
+
+            // Slim Plus mode for desktop
+            &.layout-slim-plus {
+                .layout-main-container {
+                    margin-left: 8rem;
+                }
+
+                .layout-sidebar {
+                    width: 8rem;
+                }
+
+                &.layout-static-inactive {
+                    .layout-sidebar {
+                        transform: translateX(-100%);
+                    }
+
+                    .layout-main-container {
+                        margin-left: 0;
+                        padding-left: 2rem;
+                    }
+                }
+            }
         }
 
         .layout-mask {

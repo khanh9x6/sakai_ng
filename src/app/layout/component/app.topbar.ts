@@ -39,6 +39,16 @@ import { LayoutService } from '../service/layout.service';
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
+                <button type="button" class="layout-topbar-action" (click)="toggleSlimMode()"
+                        title="Toggle Slim Menu"
+                        [ngClass]="{ 'slim-active': layoutService.layoutState().slimMenuActive }">
+                    <i class="pi pi-list"></i>
+                </button>
+                <button type="button" class="layout-topbar-action" (click)="toggleSlimPlusMode()"
+                        title="Toggle Slim Plus Menu"
+                        [ngClass]="{ 'slim-plus-active': layoutService.layoutState().slimPlusMenuActive }">
+                    <i class="pi pi-bars"></i>
+                </button>
                 <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                     <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
                 </button>
@@ -88,5 +98,13 @@ export class AppTopbar {
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    }
+
+    toggleSlimMode() {
+        this.layoutService.onSlimModeToggle();
+    }
+
+    toggleSlimPlusMode() {
+        this.layoutService.onSlimPlusModeToggle();
     }
 }

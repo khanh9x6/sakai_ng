@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { AppMenuitem } from './app.menuitem';
+import { LayoutService } from '../service/layout.service';
 
 @Component({
     selector: 'app-menu',
     standalone: true,
     imports: [CommonModule, AppMenuitem, RouterModule],
-    template: `<ul class="layout-menu">
+    template: `<ul class="layout-menu" [ngClass]="{
+        'layout-menu-slim': layoutService.layoutState().slimMenuActive || layoutService.layoutState().slimPlusMenuActive
+    }">
         <ng-container *ngFor="let item of model; let i = index">
             <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
             <li *ngIf="item.separator" class="menu-separator"></li>
@@ -17,6 +20,8 @@ import { AppMenuitem } from './app.menuitem';
 })
 export class AppMenu {
     model: MenuItem[] = [];
+
+    constructor(public layoutService: LayoutService) {}
 
     ngOnInit() {
         this.model = [
