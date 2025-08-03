@@ -85,37 +85,6 @@ declare type SurfacesType = {
                 <span class="text-sm text-muted-color font-semibold">Presets</span>
                 <p-selectbutton [options]="presets" [ngModel]="selectedPreset()" (ngModelChange)="onPresetChange($event)" [allowEmpty]="false" size="small" />
             </div>
-            <div *ngIf="showMenuModeButton()" class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Menu Mode</span>
-                <p-selectbutton [ngModel]="menuMode()" (ngModelChange)="onMenuModeChange($event)" [options]="menuModeOptions" [allowEmpty]="false" size="small" />
-            </div>
-            <div class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Menu Style</span>
-                <div class="flex gap-2">
-                    <button
-                        type="button"
-                        class="px-3 py-2 text-xs border rounded-md transition-colors"
-                        [ngClass]="{
-                            'bg-primary text-primary-contrast border-primary': isSlimMode(),
-                            'bg-surface-0 dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-200': !isSlimMode()
-                        }"
-                        (click)="onSlimModeToggle()"
-                    >
-                        Slim
-                    </button>
-                    <button
-                        type="button"
-                        class="px-3 py-2 text-xs border rounded-md transition-colors"
-                        [ngClass]="{
-                            'bg-primary text-primary-contrast border-primary': isSlimPlusMode(),
-                            'bg-surface-0 dark:bg-surface-800 border-surface-200 dark:border-surface-700 text-surface-700 dark:text-surface-200': !isSlimPlusMode()
-                        }"
-                        (click)="onSlimPlusModeToggle()"
-                    >
-                        Slim Plus
-                    </button>
-                </div>
-            </div>
         </div>
     `,
     host: {

@@ -31,23 +31,55 @@ export class LayoutService {
     onMobileSidebarToggle() {
         this.layoutState.update((prev) => ({ ...prev, staticMenuMobileActive: !this.layoutState().staticMenuMobileActive }));
     }
-    _config: layoutConfig = {
-        preset: 'Aura',
-        primary: 'emerald',
-        surface: null,
-        darkTheme: false,
-        menuMode: 'static'
-    };
+    private readonly LOCAL_STORAGE_KEY = 'layoutConfig';
+    private readonly LOCAL_STORAGE_STATE_KEY = 'layoutState';
+    _config: layoutConfig = this.loadConfigFromLocalStorage();
 
-    _state: LayoutState = {
-        staticMenuDesktopInactive: false,
-        overlayMenuActive: false,
-        configSidebarVisible: false,
-        staticMenuMobileActive: false,
-        menuHoverActive: false,
-        slimMenuActive: false,
-        slimPlusMenuActive: false
-    };
+    private loadConfigFromLocalStorage(): layoutConfig {
+        const configStr = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+        const defaultConfig: layoutConfig = {
+            preset: 'Aura',
+            primary: 'emerald',
+            surface: null,
+            darkTheme: false,
+            menuMode: 'static'
+        };
+        if (configStr) {
+            try {
+                const loaded = JSON.parse(configStr);
+                // Đảm bảo menuMode luôn có giá trị
+                if (!loaded.menuMode) loaded.menuMode = 'static';
+                return { ...defaultConfig, ...loaded };
+            } catch {
+                return defaultConfig;
+            }
+        }
+        return defaultConfig;
+    }
+
+    _state: LayoutState = this.loadStateFromLocalStorage();
+
+    private loadStateFromLocalStorage(): LayoutState {
+        const stateStr = localStorage.getItem(this.LOCAL_STORAGE_STATE_KEY);
+        const defaultState: LayoutState = {
+            staticMenuDesktopInactive: false,
+            overlayMenuActive: false,
+            configSidebarVisible: false,
+            staticMenuMobileActive: false,
+            menuHoverActive: false,
+            slimMenuActive: false,
+            slimPlusMenuActive: false
+        };
+        if (stateStr) {
+            try {
+                const loaded = JSON.parse(stateStr);
+                return { ...defaultState, ...loaded };
+            } catch {
+                return defaultState;
+            }
+        }
+        return defaultState;
+    }
 
     layoutConfig = signal<layoutConfig>(this._config);
 
@@ -172,6 +204,8 @@ export class LayoutService {
 
     onConfigUpdate() {
         this._config = { ...this.layoutConfig() };
+        // Lưu vào localStorage mỗi lần cập nhật
+        localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(this._config));
         this.configUpdate.next(this.layoutConfig());
     }
 
@@ -180,19 +214,27 @@ export class LayoutService {
     }
 
     onSlimModeToggle() {
-        this.layoutState.update((prev) => ({
-            ...prev,
-            slimMenuActive: !this.layoutState().slimMenuActive,
-            slimPlusMenuActive: false // Tắt slim plus khi bật slim
-        }));
+        this.layoutState.update((prev) => {
+            const newState = {
+                ...prev,
+                slimMenuActive: !this.layoutState().slimMenuActive,
+                slimPlusMenuActive: false // Tắt slim plus khi bật slim
+            };
+            localStorage.setItem(this.LOCAL_STORAGE_STATE_KEY, JSON.stringify(newState));
+            return newState;
+        });
     }
 
     onSlimPlusModeToggle() {
-        this.layoutState.update((prev) => ({
-            ...prev,
-            slimPlusMenuActive: !this.layoutState().slimPlusMenuActive,
-            slimMenuActive: false // Tắt slim khi bật slim plus
-        }));
+        this.layoutState.update((prev) => {
+            const newState = {
+                ...prev,
+                slimPlusMenuActive: !this.layoutState().slimPlusMenuActive,
+                slimMenuActive: false // Tắt slim khi bật slim plus
+            };
+            localStorage.setItem(this.LOCAL_STORAGE_STATE_KEY, JSON.stringify(newState));
+            return newState;
+        });
     }
 
     isSlimPlusMode = computed(() => this.layoutState().slimPlusMenuActive);
