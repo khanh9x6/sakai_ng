@@ -28,6 +28,9 @@ interface MenuChangeEvent {
     providedIn: 'root'
 })
 export class LayoutService {
+    onMobileSidebarToggle() {
+        this.layoutState.update((prev) => ({ ...prev, staticMenuMobileActive: !this.layoutState().staticMenuMobileActive }));
+    }
     _config: layoutConfig = {
         preset: 'Aura',
         primary: 'emerald',
