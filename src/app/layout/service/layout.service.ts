@@ -38,8 +38,8 @@ export class LayoutService {
     private loadConfigFromLocalStorage(): layoutConfig {
         const configStr = localStorage.getItem(this.LOCAL_STORAGE_KEY);
         const defaultConfig: layoutConfig = {
-            preset: 'Aura',
-            primary: 'emerald',
+            preset: 'Nora',
+            primary: 'ocean',
             surface: null,
             darkTheme: false,
             menuMode: 'static'
