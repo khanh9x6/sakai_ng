@@ -7,7 +7,8 @@
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
-                    "style": "scss"
+                    "style": "scss",
+                    "skipTests": true
                 }
             },
             "root": "",
@@ -17,7 +18,7 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": "dist",
+                        "outputPath": "dist/app",
                         "index": "src/index.html",
                         "browser": "src/main.ts",
                         "polyfills": [
@@ -91,6 +92,9 @@
                         ],
                         "scripts": []
                     }
+                },
+                "deploy": {
+                  "builder": "angular-cli-ghpages:deploy"
                 }
             }
         }
