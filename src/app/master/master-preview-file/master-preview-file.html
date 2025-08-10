@@ -1,0 +1,254 @@
+<div class="viewer-container">
+  <!-- Top Controls: Navigation + Zoom + File Info -->
+  <div class="top-controls">
+    <!-- Navigation Controls -->
+    <div class="navigation-controls">
+      <button pButton
+        (click)="prevFile()"
+        [disabled]="currentIndex === 0 || fileUrls.length <= 1"
+        icon="pi pi-chevron-left"
+        title="Tập tin trước (←)"
+        class="p-button-outlined p-button-sm">
+      </button>
+      <span class="file-position">{{ currentIndex + 1 }} / {{ fileUrls.length }}</span>
+      <button pButton
+        (click)="nextFile()"
+        [disabled]="currentIndex === fileUrls.length - 1 || fileUrls.length <= 1"
+        icon="pi pi-chevron-right"
+        title="Tập tin tiếp theo (→)"
+        class="p-button-outlined p-button-sm">
+      </button>
+    </div>
+
+    <!-- File Name -->
+    <div class="file-info">
+      <span class="file-name" [title]="fileName">{{ fileName }}</span>
+    </div>
+
+    <!-- Zoom Controls -->
+    <div class="zoom-controls" *ngIf="fileUrls.length > 0 && (fileType === 'image' || fileType === 'pdf')">
+      <button
+        pButton
+        (click)="zoomOut()"
+        [disabled]="zoomLevel <= 0.4"
+        title="Thu nhỏ (Ctrl + -)"
+        icon="pi pi-minus"
+        class="p-button-outlined p-button-sm">
+      </button>
+      <span class="zoom-level">{{ zoomPercentage }}%</span>
+      <button
+        pButton
+        (click)="zoomIn()"
+        [disabled]="zoomLevel >= 3"
+        title="Phóng to (Ctrl + +)"
+        icon="pi pi-plus"
+        class="p-button-outlined p-button-sm">
+      </button>
+      <button
+        pButton
+        (click)="resetZoom()"
+        title="Kích thước gốc (Ctrl + 0)"
+        icon="pi pi-refresh"
+        class="p-button-outlined p-button-sm">
+      </button>
+    </div>
+
+    <!-- Excel File Info -->
+    <div class="excel-info" *ngIf="fileUrls.length > 0 && fileType === 'excel'">
+      <i class="pi pi-table"></i>
+      <span>Excel File</span>
+    </div>
+
+    <!-- Download Button -->
+    <div class="download-controls" *ngIf="fileUrls.length > 0">
+      <button
+        pButton
+        (click)="downloadFile()"
+        title="Tải xuống tập tin"
+        icon="pi pi-download"
+        label="Tải xuống"
+        class="p-button-outlined p-button-sm">
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="content-area"
+       (touchstart)="onTouchStart($event)"
+       (touchend)="onTouchEnd($event)">
+
+    <!-- No Files Message -->
+    <ng-container *ngIf="fileUrls.length === 0">
+      <div class="no-files">
+        <i class="pi pi-folder-open"></i>
+        <p>Không có tập tin nào để hiển thị</p>
+      </div>
+    </ng-container>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="imageLoading" class="loading-spinner"></div>
+
+    <!-- PDF Viewer -->
+    <ng-container *ngIf="fileUrls.length > 0 && fileType === 'pdf'">
+      <div class="pdf-container">
+        <pdf-viewer
+          [src]="currentFile"
+          [render-text]="true"
+          [original-size]="true"
+          [fit-to-page]="true"
+          [zoom]="zoomLevel"
+          style="display: block; width: 100%; height: 100%;">
+        </pdf-viewer>
+      </div>
+    </ng-container>
+
+    <!-- Image Viewer -->
+    <ng-container *ngIf="fileUrls.length > 0 && fileType === 'image'">
+      <div class="image-container" (dblclick)="onDoubleClick()">
+        <img
+          #imageElement
+          [src]="safeImageUrl"
+          [style.transform]="'scale(' + zoomLevel + ')'"
+          [alt]="fileName"
+          [title]="fileName + ' - ' + zoomPercentage + '%'"
+          (error)="handleImageError($event)"
+          (load)="handleImageLoad($event)"
+          (loadstart)="handleImageLoadStart($event)"
+          loading="lazy"
+          draggable="false">
+
+        <!-- Error Overlay -->
+        <div *ngIf="imageError" class="error-overlay">
+          <i class="pi pi-exclamation-triangle"></i>
+          <p>Không thể tải hình ảnh</p>
+          <button
+            pButton
+            (click)="retryLoadImage()"
+            label="Thử lại"
+            icon="pi pi-refresh"
+            class="p-button-sm">
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Excel Viewer -->
+    <ng-container *ngIf="fileUrls.length > 0 && fileType === 'excel'">
+      <div class="excel-container">
+        <!-- Loading state for Excel -->
+        <div *ngIf="excelLoading" class="loading-spinner"></div>
+
+        <!-- Local Excel file notice -->
+        <div class="excel-local-notice" *ngIf="isLocalFile">
+          <i class="pi pi-info-circle"></i>
+          <h4>File Excel từ Server Local</h4>
+          <p>File này được lưu trữ tại server local và không thể preview trực tiếp trong trình duyệt.</p>
+          <div class="local-actions">
+            <a [href]="safeImageUrl" download [download]="fileName">
+              <button
+                pButton
+                label="Tải xuống để xem"
+                icon="pi pi-download"
+                class="p-button-primary">
+              </button>
+            </a>
+            <button
+              pButton
+              label="Xem thông tin file"
+              icon="pi pi-info"
+              class="p-button-outlined"
+              (click)="showFileInfo = !showFileInfo">
+            </button>
+          </div>
+
+          <!-- File info panel -->
+          <div class="file-info-panel" *ngIf="showFileInfo">
+            <div class="info-item">
+              <strong>Tên file:</strong> {{ fileName }}
+            </div>
+            <div class="info-item">
+              <strong>Loại:</strong> {{ getExcelTypeDescription() }}
+            </div>
+            <div class="info-item">
+              <strong>Đường dẫn:</strong> {{ currentFile }}
+            </div>
+            <div class="info-help">
+              <i class="pi pi-lightbulb"></i>
+              <span>Để xem nội dung Excel, vui lòng tải file về và mở bằng Microsoft Excel hoặc Google Sheets.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Online Excel viewers (for public files only) -->
+        <ng-container *ngIf="!isLocalFile">
+          <!-- Primary Excel viewer (Microsoft Office Online) -->
+          <iframe
+            *ngIf="excelViewerUrl && !excelError"
+            [src]="excelViewerUrl"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            scrolling="auto"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            title="Excel Preview - Microsoft Office Online"
+            (load)="onExcelIframeLoad()"
+            (error)="onExcelIframeError()">
+          </iframe>
+
+          <!-- Fallback Excel viewer (Google Docs) -->
+          <iframe
+            *ngIf="excelError && googleSheetsViewerUrl"
+            [src]="googleSheetsViewerUrl"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            scrolling="auto"
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            title="Excel Preview - Google Sheets Viewer"
+            (load)="onExcelIframeLoad()">
+          </iframe>
+
+          <!-- Final fallback for public files -->
+          <div class="excel-fallback" *ngIf="excelError && !googleSheetsViewerUrl">
+            <i class="pi pi-table"></i>
+            <p>Không thể preview Excel online</p>
+            <p class="hint">Service preview có thể không khả dụng</p>
+            <div class="fallback-actions">
+              <a [href]="safeImageUrl" download [download]="fileName">
+                <button
+                  pButton
+                  label="Tải xuống Excel"
+                  icon="pi pi-download"
+                  class="p-button-primary">
+                </button>
+              </a>
+              <button
+                pButton
+                label="Mở trong Office Online"
+                icon="pi pi-external-link"
+                class="p-button-outlined"
+                (click)="openInOfficeOnline()">
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <!-- Other File Types -->
+    <ng-container *ngIf="fileUrls.length > 0 && fileType === 'other'">
+      <div class="other-file">
+        <i class="pi pi-file"></i>
+        <p>Không thể preview định dạng này</p>
+        <a [href]="safeImageUrl" download [download]="fileName">
+          <button
+            pButton
+            label="Tải xuống"
+            icon="pi pi-download"
+            class="p-button-primary">
+          </button>
+        </a>
+      </div>
+    </ng-container>
+  </div>
+</div>

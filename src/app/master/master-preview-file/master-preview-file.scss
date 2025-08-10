@@ -1,37 +1,474 @@
+/* Clean, Simple File Viewer Styles */
 .viewer-container {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-width: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  background: #ffffff;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.viewer-header, .viewer-footer {
+/* Top Controls Bar */
+.top-controls {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+  gap: 16px;
+  flex-shrink: 0;
 }
 
-.viewer-content {
-  flex: 1;
+.navigation-controls {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 8px;
+
+  .file-position {
+    background: #e9ecef;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #495057;
+    min-width: 50px;
+    text-align: center;
+  }
 }
 
-.image-container {
-  overflow: auto;
-  max-width: 100%;
-  max-height: 70vh;
-}
+.file-info {
+  flex: 1;
+  min-width: 0;
 
-.image-container img {
-  transition: transform 0.2s ease;
-  max-width: 100%;
-  height: auto;
+  .file-name {
+    font-weight: 500;
+    color: #212529;
+    font-size: 0.95rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
 }
 
 .zoom-controls {
-  margin-top: 8px;
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
+
+  .zoom-level {
+    background: #e9ecef;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    color: #495057;
+    min-width: 45px;
+    text-align: center;
+  }
+}
+
+/* Excel File Info */
+.excel-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #28a745;
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+/* Download Controls */
+.download-controls {
+  display: flex;
+  align-items: center;
+
+  button {
+    white-space: nowrap;
+  }
+}/* Content Area */
+.content-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  position: relative;
+  background: #ffffff;
+}
+
+/* No Files State */
+.no-files {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  text-align: center;
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 10;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* PDF Container */
+.pdf-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+/* Excel Container */
+.excel-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  iframe {
+    border: none;
+    border-radius: 4px;
+    background: #ffffff;
+  }
+}
+
+.excel-fallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: #6c757d;
+  gap: 16px;
+  padding: 32px;
+
+  i {
+    font-size: 3rem;
+    color: #28a745;
+    opacity: 0.7;
+  }
+
+  p {
+    margin: 0;
+
+    &:first-of-type {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: #495057;
+    }
+
+    &.hint {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+  }
+
+  .fallback-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Local Excel Notice */
+.excel-local-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 32px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  margin: 16px;
+
+  > i {
+    font-size: 3rem;
+    color: #17a2b8;
+    margin-bottom: 16px;
+  }
+
+  h4 {
+    color: #495057;
+    margin: 0 0 12px 0;
+    font-size: 1.2rem;
+  }
+
+  > p {
+    color: #6c757d;
+    margin: 0 0 24px 0;
+    max-width: 400px;
+    line-height: 1.5;
+  }
+
+  .local-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+}
+
+.file-info-panel {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 16px;
+  text-align: left;
+  max-width: 500px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  .info-item {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+
+    strong {
+      color: #495057;
+      display: inline-block;
+      min-width: 80px;
+    }
+  }
+
+  .info-help {
+    margin-top: 16px;
+    padding: 12px;
+    background: #e7f3ff;
+    border-left: 4px solid #007bff;
+    border-radius: 4px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+
+    i {
+      color: #007bff;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    span {
+      font-size: 0.85rem;
+      color: #495057;
+      line-height: 1.4;
+    }
+  }
+}/* Image Container */
+.image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  position: relative;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+    cursor: zoom-in;
+  }
+}
+
+/* Error Overlay */
+.error-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  color: #dc3545;
+  text-align: center;
+  gap: 16px;
+
+  i {
+    font-size: 2rem;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+/* Other File Type */
+.other-file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #6c757d;
+  gap: 16px;
+
+  i {
+    font-size: 3rem;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+/* PDF Viewer Styles */
+::ng-deep pdf-viewer {
+  width: 100% !important;
+  height: 100% !important;
+  background: #ffffff;
+}
+
+::ng-deep .page {
+  margin-bottom: 8px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .top-controls {
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px 12px;
+
+    .navigation-controls,
+    .zoom-controls,
+    .download-controls {
+      order: 2;
+    }
+
+    .file-info {
+      order: 1;
+      text-align: center;
+    }
+
+    .excel-info {
+      order: 3;
+    }
+  }
+
+  .file-name {
+    font-size: 0.875rem;
+  }
+
+  .navigation-controls,
+  .zoom-controls,
+  .download-controls {
+    button {
+      padding: 6px 8px;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .top-controls {
+    padding: 6px 8px;
+  }
+
+  .file-name {
+    font-size: 0.8rem;
+  }
+
+  .file-position,
+  .zoom-level {
+    font-size: 0.75rem;
+    padding: 3px 6px;
+  }
+}
+
+/* Button Styles */
+::ng-deep .p-button {
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  &.p-button-outlined {
+    background: transparent;
+    border: 1px solid #dee2e6;
+    color: #495057;
+
+    &:hover:not(:disabled) {
+      background: #f8f9fa;
+      border-color: #007bff;
+      color: #007bff;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &.p-button-sm {
+    padding: 4px 8px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Scrollbar Styles */
+.content-area::-webkit-scrollbar,
+.image-container::-webkit-scrollbar,
+.pdf-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.content-area::-webkit-scrollbar-track,
+.image-container::-webkit-scrollbar-track,
+.pdf-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.content-area::-webkit-scrollbar-thumb,
+.image-container::-webkit-scrollbar-thumb,
+.pdf-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.content-area::-webkit-scrollbar-thumb:hover,
+.image-container::-webkit-scrollbar-thumb:hover,
+.pdf-container::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
 }

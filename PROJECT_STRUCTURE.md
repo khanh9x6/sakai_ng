@@ -4,7 +4,7 @@
 Sakai NG là một ứng dụng Angular hiện đại được xây dựng với Angular 20, sử dụng PrimeNG UI library và Tailwind CSS. Dự án được thiết kế theo kiến trúc component standalone và feature-based routing.
 
 ## Thông tin Dự án
-- **Tên dự án**: Sakai NG  
+- **Tên dự án**: Sakai NG
 - **Phiên bản**: 20.0.0
 - **Framework**: Angular 20
 - **UI Library**: PrimeNG 20
@@ -46,7 +46,7 @@ Hệ thống layout chính của ứng dụng:
 
 **Components:**
 - `app.layout.ts` - Component layout chính
-- `app.topbar.ts` - Header/topbar component  
+- `app.topbar.ts` - Header/topbar component
 - `app.menu.ts` - Menu chính
 - `app.menuitem.ts` - Menu item component
 - `app.sidebar.ts` - Sidebar component
@@ -152,7 +152,7 @@ Các service chung:
 
 **Component Styles:**
 - `_footer.scss` - Footer styles
-- `_menu.scss` - Menu styles  
+- `_menu.scss` - Menu styles
 - `_topbar.scss` - Topbar styles
 - `_typography.scss` - Typography styles
 
@@ -371,7 +371,7 @@ import { TableModule } from 'primeng/table';
 export class PrimeExampleComponent {
     data: any[] = [];
     columns: any[] = [];
-    
+
     handleClick() {
         // Handle button click
     }
@@ -398,7 +398,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ProductsComponent {
     constructor(private router: Router) {}
-    
+
     navigateToDetail(id: number) {
         this.router.navigate(['/products', id]);
     }
@@ -427,7 +427,7 @@ import { Observable } from 'rxjs';
 })
 export class ExampleService {
     constructor(private http: HttpClient) {}
-    
+
     getData(): Observable<any[]> {
         return this.http.get<any[]>('/api/data');
     }
@@ -449,9 +449,9 @@ import { ExampleService } from '../service/example.service';
 })
 export class DataComponent implements OnInit {
     data: any[] = [];
-    
+
     constructor(private exampleService: ExampleService) {}
-    
+
     ngOnInit() {
         this.exampleService.getData().subscribe(
             data => this.data = data
@@ -479,17 +479,17 @@ export class DataComponent implements OnInit {
 // example-component.scss
 :host {
     display: block;
-    
+
     .custom-class {
         background: var(--surface-ground);
         padding: 1rem;
         border-radius: var(--border-radius);
-        
+
         h2 {
             color: var(--text-color);
             margin-bottom: 0.5rem;
         }
-        
+
         @media (max-width: 768px) {
             padding: 0.5rem;
         }
@@ -580,22 +580,22 @@ export class ExampleComponent implements OnInit, OnDestroy {
     // Public properties
     @Input() inputProperty: string = '';
     @Output() outputEvent = new EventEmitter<any>();
-    
+
     // Private properties
     private subscription: Subscription = new Subscription();
-    
+
     // Constructor
     constructor(private service: ExampleService) {}
-    
+
     // Lifecycle hooks
     ngOnInit() {}
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
-    
+
     // Public methods
     public handleClick() {}
-    
+
     // Private methods
     private helperMethod() {}
 }
@@ -621,17 +621,17 @@ import { ExampleService } from '../service/example.service';
     <header>
         <h1>Title</h1>
     </header>
-    
+
     <main>
         <!-- Use *ngIf for conditional rendering -->
         <div *ngIf="showContent; else loading">
             Content
         </div>
-        
+
         <ng-template #loading>
             <p>Loading...</p>
         </ng-template>
-        
+
         <!-- Use trackBy for *ngFor -->
         <ul>
             <li *ngFor="let item of items; trackBy: trackByFn">
@@ -648,15 +648,15 @@ export class ExampleComponent implements OnInit {
     loading = false;
     error: string | null = null;
     data: any[] = [];
-    
+
     ngOnInit() {
         this.loadData();
     }
-    
+
     private loadData() {
         this.loading = true;
         this.error = null;
-        
+
         this.service.getData().subscribe({
             next: (data) => {
                 this.data = data;
@@ -707,7 +707,7 @@ describe('ExampleComponent', () => {
     it('should render title', () => {
         component.title = 'Test Title';
         fixture.detectChanges();
-        
+
         const compiled = fixture.nativeElement;
         expect(compiled.querySelector('h1')?.textContent).toContain('Test Title');
     });
@@ -794,7 +794,7 @@ export class ExampleComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         console.time('component-init');
     }
-    
+
     ngAfterViewInit() {
         console.timeEnd('component-init');
     }
@@ -811,5 +811,59 @@ Tham khảo các component có sẵn trong dự án:
 - **Authentication Pages**: `src/app/pages/auth/`
 
 Mỗi component này đều là ví dụ tốt về cách implement các pattern khác nhau trong Angular standalone components.
+
+## Sử dụng Shared Imports
+
+Dự án cung cấp tập hợp các module thường được sử dụng thông qua file `src/app/shared/shared-imports.ts`. Cách tiếp cận này giúp:
+
+- Giảm code trùng lặp trong các component
+- Đơn giản hóa việc thêm/sửa dependencies
+- Dễ dàng quản lý các nhóm module theo chức năng
+
+### Các nhóm module có sẵn
+
+```typescript
+// Common Angular modules
+import { COMMON_IMPORTS } from '@/shared/shared-imports';
+// Form-related modules
+import { FORM_IMPORTS } from '@/shared/shared-imports';
+// Layout-related modules
+import { LAYOUT_IMPORTS } from '@/shared/shared-imports';
+// Data-related modules
+import { DATA_IMPORTS } from '@/shared/shared-imports';
+// Miscellaneous UI modules
+import { MISC_IMPORTS } from '@/shared/shared-imports';
+```
+
+### Sử dụng trong component
+
+```typescript
+import { Component } from '@angular/core';
+import { MISC_DEMO_IMPORTS } from '@/shared/shared-imports';
+
+@Component({
+    selector: 'app-example',
+    standalone: true,
+    imports: [...MISC_DEMO_IMPORTS], // Sử dụng spread operator
+    template: `
+        <!-- Template goes here -->
+    `
+})
+export class ExampleComponent {}
+```
+
+### Mở rộng shared imports
+
+Khi cần thêm mới module vào shared imports:
+
+1. Mở file `src/app/shared/shared-imports.ts`
+2. Thêm import mới cho module
+3. Thêm module vào nhóm tương ứng hoặc tạo nhóm mới
+4. Sử dụng trong components
+
+### Best Practices
+- Chỉ import các modules thực sự cần thiết cho component
+- Cân nhắc tạo các nhóm imports tùy chỉnh cho các chức năng cụ thể
+- Đảm bảo path mapping trong `tsconfig.json` để sử dụng alias `@/shared/`
 
 Tài liệu này cung cấp cái nhìn tổng quan về cấu trúc dự án Sakai NG và hướng dẫn để developers có thể hiểu và contribute vào dự án một cách hiệu quả.

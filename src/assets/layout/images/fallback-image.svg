@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200px" height="200px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>Image Not Found</title>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#F8F9FA" x="0" y="0" width="200" height="200"></rect>
+        <g transform="translate(40, 40)">
+            <rect stroke="#CCCCCC" stroke-width="4" x="0" y="0" width="120" height="120" rx="8"></rect>
+            <path d="M30,80 L50,60 L70,75 L90,40 L110,90" stroke="#AAAAAA" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle fill="#AAAAAA" cx="40" cy="40" r="10"></circle>
+        </g>
+        <text font-family="Arial" font-size="14" font-weight="bold" fill="#666666" text-anchor="middle" x="100" y="180">
+            Image Not Found
+        </text>
+    </g>
+</svg>
